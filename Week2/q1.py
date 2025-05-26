@@ -76,31 +76,51 @@ class History:
     def is_win(self):
         # check if the board position is a win for either players
         # Feel free to implement this in anyway if needed
-        pass
+        win_poss = [
+            (0, 1, 2), (3, 4, 5), (6, 7, 8),  # rows
+            (0, 3, 6), (1, 4, 7), (2, 5, 8),  # columns
+            (0, 4, 8), (2, 4, 6)              # diagonals
+        ]
+        for a,b,c in win_poss:
+            if self.board[a]!='0' and self.board[a]==self.board[b]==self.board[c]:
+                return self.board[a]
+        return None
 
     def is_draw(self):
         # check if the board position is a draw
         # Feel free to implement this in anyway if needed
-        pass
+        return all(cell != '0' for cell in self.board) and self.is_win() is None
 
     def get_valid_actions(self):
         # get the empty squares from the board
         # Feel free to implement this in anyway if needed
-        pass
+        valid_actions = []
+        for i in range(9):
+            if self.board[i]=='0':
+                valid_actions.append(i)
+        return valid_actions
 
     def is_terminal_history(self):
         # check if the history is a terminal history
         # Feel free to implement this in anyway if needed
-        pass
+        return self.is_win() is not None or self.is_draw()
 
     def get_utility_given_terminal_history(self):
         # Feel free to implement this in anyway if needed
-        pass
+        winner = self.is_win()
+        if winner == 'x':
+            return 1
+        elif winner == 'o':
+            return -1
+        else:
+            return 0
+        
 
     def update_history(self, action):
         # In case you need to create a deepcopy and update the history obj to get the next history object.
         # Feel free to implement this in anyway if needed
-        pass
+        updated_history = copy.deepcopy(self.history) + [action]
+        return History(history=updated_history)
 
 
 def backward_induction(history_obj):
@@ -122,7 +142,32 @@ def backward_induction(history_obj):
     # actions. But since tictactoe is a PIEFG, there always exists an optimal deterministic strategy (SPNE). So your
     # policy will be something like this {"0": 1, "1": 0, "2": 0, "3": 0, "4": 0, "5": 0, "6": 0, "7": 0, "8": 0} where
     # "0" was the one of the best actions for the current player/history.
-    return -2
+    if history_obj.is_terminal_history():
+        return history_obj.get_utility_given_terminal_history()
+    
+    if history_obj.current_player() == 'x':
+        bestUtility = -math.inf
+        bestAction =  None
+        for action in history_obj.get_valid_actions():
+            utility = backward_induction(history_obj.update_history(action))
+            if utility>bestUtility: 
+                bestUtility = utility
+                bestAction = action
+        strategy = {str(x): 1 if x==bestAction else 0 for x in range(9)}
+        strategy_dict_x[''.join(str(x) for x in history_obj.history)] = strategy
+
+    elif history_obj.current_player() == 'o':
+        bestUtility = math.inf
+        bestAction=None
+        for action in history_obj.get_valid_actions():
+            utility = backward_induction(history_obj.update_history(action))
+            if utility<bestUtility: 
+                bestUtility = utility
+                bestAction = action
+        strategy = {str(x): 1 if x==bestAction else 0 for x in range(9)}
+        strategy_dict_o[''.join(str(x) for x in history_obj.history)] = strategy
+    
+    return bestUtility
     # TODO implement
 
 
