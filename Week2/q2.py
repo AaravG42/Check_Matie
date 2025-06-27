@@ -159,20 +159,49 @@ class History:
         return boards_str
 
     def is_win(self):
-        # Feel free to implement this in anyway if needed
-        pass
+        if not self.get_valid_actions():
+            return 1 if self.get_current_player() == 1 else -1
+        return None
+            
 
     def get_valid_actions(self):
         # Feel free to implement this in anyway if needed
-        pass
+        center_moves = []
+        corner_moves = []
+        edge_moves = []
+
+        for board_idx, board in enumerate(self.boards):
+            if self.active_board_stats[board_idx] == 1:
+                for cell_idx_on_board, cell_value in enumerate(board):
+                    if cell_value == '0':  
+                        action = board_idx * 9 + cell_idx_on_board
+                        
+                        if cell_idx_on_board == 4:  
+                            center_moves.append(action)
+                        elif cell_idx_on_board in [0, 2, 6, 8]:  
+                            corner_moves.append(action)
+                        else:  
+                            edge_moves.append(action)
+                            
+        return  center_moves + corner_moves  + edge_moves if self.num_boards % 2 == 0 else edge_moves + corner_moves + center_moves
 
     def is_terminal_history(self):
         # Feel free to implement this in anyway if needed
-        pass
+        if self.is_win() is not None:
+            return True
+        else: 
+            return False
+        
 
     def get_value_given_terminal_history(self):
         # Feel free to implement this in anyway if needed
-        pass
+        return self.is_win()
+
+    def update_history(self, action):
+        # In case you need to create a deepcopy and update the history obj to get the next history object.
+        # Feel free to implement this in anyway if needed
+        updated_history = copy.deepcopy(self.history) + [action]
+        return History(history=updated_history, num_boards=self.num_boards)
 
 
 def alpha_beta_pruning(history_obj, alpha, beta, max_player_flag):
@@ -187,28 +216,53 @@ def alpha_beta_pruning(history_obj, alpha, beta, max_player_flag):
     :return: float
     """
     # These two already given lines track the visited histories.
+    global board_positions_val_dict
     global visited_histories_list
+
+    if board_positions_val_dict.get(history_obj.get_boards_str()):
+        return board_positions_val_dict.get(history_obj.get_boards_str())
+
     visited_histories_list.append(history_obj.history)
     # TODO implement
-    return -2
+    if history_obj.is_terminal_history():
+        return history_obj.get_value_given_terminal_history()
+    
+    if max_player_flag:
+        bestUtility = -math.inf
+        for action in history_obj.get_valid_actions():
+            utility = alpha_beta_pruning(history_obj.update_history(action), alpha, beta, not max_player_flag)
+            bestUtility = max(utility, bestUtility)
+            alpha = max(bestUtility, alpha)
+            if alpha >= beta:
+                break 
+    else:
+        bestUtility = math.inf
+        for action in history_obj.get_valid_actions():
+            utility = alpha_beta_pruning(history_obj.update_history(action), alpha, beta, not max_player_flag)
+            bestUtility = min(utility, bestUtility)
+            beta = min(bestUtility, beta)
+            if alpha >= beta:
+                break
+    board_positions_val_dict[history_obj.get_boards_str()] = bestUtility           
+    return bestUtility
     # TODO implement
 
 
-def maxmin(history_obj, max_player_flag):
-    """
-        Calculate the maxmin value given a History object using maxmin rule. Store the value of already visited
-        board positions to speed up, avoiding recursive calls for a different history with the same board position.
-    :param history_obj: History class object
-    :param max_player_flag: True if the player is maximizing player
-    :return: float
-    """
-    # Global variable to keep track of visited board positions. This is a dictionary with keys as str version of
-    # self.boards and value represents the maxmin value. Use the get_boards_str function in History class to get
-    # the key corresponding to self.boards.
-    global board_positions_val_dict
-    # TODO implement
-    return -2
-    # TODO implement
+# def maxmin(history_obj, max_player_flag):
+#     """
+#         Calculate the maxmin value given a History object using maxmin rule. Store the value of already visited
+#         board positions to speed up, avoiding recursive calls for a different history with the same board position.
+#     :param history_obj: History class object
+#     :param max_player_flag: True if the player is maximizing player
+#     :return: float
+#     """
+#     # Global variable to keep track of visited board positions. This is a dictionary with keys as str version of
+#     # self.boards and value represents the maxmin value. Use the get_boards_str function in History class to get
+#     # the key corresponding to self.boards.
+#     global board_positions_val_dict
+#     # TODO implement
+#     return -2
+#     # TODO implement
 
 
 def solve_alpha_beta_pruning(history_obj, alpha, beta, max_player_flag):
@@ -217,12 +271,13 @@ def solve_alpha_beta_pruning(history_obj, alpha, beta, max_player_flag):
     return val, visited_histories_list
 
 
+
 if __name__ == "__main__":
     logging.info("start")
     logging.info("alpha beta pruning")
-    value, visited_histories = solve_alpha_beta_pruning(History(history=[], num_boards=2), -math.inf, math.inf, True)
+    value, visited_histories = solve_alpha_beta_pruning(History(history=[], num_boards=1), -math.inf, math.inf, True)
     logging.info("maxmin value {}".format(value))
     logging.info("Number of histories visited {}".format(len(visited_histories)))
-    logging.info("maxmin memory")
-    logging.info("maxmin value {}".format(maxmin(History(history=[], num_boards=2), True)))
+    # logging.info("maxmin memory")
+    # logging.info("maxmin value {}".format(maxmin(History(history=[], num_boards=2), True)))
     logging.info("end")
