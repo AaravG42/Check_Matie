@@ -14,7 +14,7 @@ Build your own competitive chess engine in 8 weeks! This project combines **clas
 ## 📅 Commitment
 Expect ~5 hours/week. It's a bit hectic but super rewarding!
 
-## Things I learnt and Implemented
+## Things I Implemented
 
 ### Optimisations over alpha-beta pruning
 - Switched from minimax to negamax (simplifies code, same result)
@@ -36,7 +36,6 @@ Expect ~5 hours/week. It's a bit hectic but super rewarding!
     - TT move first (from previous search)
     - Captures next (Most Valuable Victim - Least Valuable Attacker)
     - Then promotions, then checks
-<!-- - UCI protocol support for easy testing against other engines -->
 
 ### Evaluation function
 - Material: pawn 100, knight 320, bishop 330, rook 500, queen 900
@@ -56,5 +55,5 @@ Expect ~5 hours/week. It's a bit hectic but super rewarding!
 - Cutechess: https://github.com/cutechess/cutechess
 - Zobrist hashing: https://en.wikipedia.org/wiki/Zobrist_hashing
 - Sebastian League's Videos:
-    https://www.youtube.com/watch?v=U4ogK0MIzqk, 
-    https://www.youtube.com/watch?v=_vqlIPDR2TU 
+    - https://www.youtube.com/watch?v=U4ogK0MIzqk
+    - https://www.youtube.com/watch?v=_vqlIPDR2TU 
