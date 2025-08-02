@@ -14,7 +14,7 @@ Build your own competitive chess engine in 8 weeks! This project combines **clas
 ## 📅 Commitment
 Expect ~5 hours/week. It's a bit hectic but super rewarding!
 
-## Things I learnt and Implemented
+## Things I learnt and Implemented - Midterm
 
 ### Optimisations over alpha-beta pruning
 - Switched from minimax to negamax (simplifies code, same result)
@@ -58,3 +58,44 @@ Expect ~5 hours/week. It's a bit hectic but super rewarding!
 - Sebastian League's Videos:
     https://www.youtube.com/watch?v=U4ogK0MIzqk, 
     https://www.youtube.com/watch?v=_vqlIPDR2TU 
+
+## Things I learnt and Implemented - Endterm
+
+### NNUE (Efficiently Updatable Neural Network) Integration
+- Basic C++ NNUE evaluator with incremental updates
+- 768 input features (6 pieces × 2 colors × 64 squares)
+- Simple 2-layer network: 768 → 256 → 1 
+- SCReLU activation (just clipped x²)
+- 16-bit weight quantization for the C++ engine
+- Incremental accumulator updates (add/subtract features on move make/unmake)
+- Dual perspective (white/black viewpoints)
+- Binary weight file loading
+
+### NNUE Training Setup
+- Basic PyTorch training with MSE loss
+- Random position generator + Stockfish evaluation for training data
+- Standard Adam optimizer with learning rate decay
+- Weight converter from PyTorch model to binary format
+
+### Opening Book Integration
+- Polyglot book format support (Perfect2023.bin with 700k+ positions)
+- Zobrist hashing for fast position lookup in book entries
+- Weighted random move selection from book alternatives
+- Book move gets priority over search in opening phase
+- Binary file parsing with proper endianness handling
+- Fallback to search when position not in book
+
+### Engine Configuration
+- Config file system for runtime settings
+- NNUE enable/disable toggle
+- Hash table size configuration  
+- Evaluation file path specification
+- Easy switching between classical eval and NNUE
+
+### Advanced Evaluation Features
+- Lawnmower mate pattern recognition for endgames
+- Enhanced king safety evaluation in endings
+- Piece coordination bonuses for major pieces
+- Checkmate detection with large bonuses
+- Smooth transition between opening/middlegame/endgame phases
+

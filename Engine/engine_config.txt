@@ -1,0 +1,3 @@
+Use NNUE=true
+EvalFile=nnue_weights.bin
+Hash=64 

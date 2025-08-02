@@ -47,6 +47,7 @@
         "bitset": "cpp",
         "charconv": "cpp",
         "optional": "cpp",
-        "sstream": "cpp"
+        "sstream": "cpp",
+        "chrono": "cpp"
     }
 }

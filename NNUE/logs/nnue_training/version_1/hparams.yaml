@@ -1,0 +1,5 @@
+hidden_size: 256
+lambda_eval: 1.0
+lambda_result: 0.1
+learning_rate: 0.001
+weight_decay: 0.01
