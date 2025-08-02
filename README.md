@@ -36,7 +36,6 @@ Expect ~5 hours/week. It's a bit hectic but super rewarding!
     - TT move first (from previous search)
     - Captures next (Most Valuable Victim - Least Valuable Attacker)
     - Then promotions, then checks
-<!-- - UCI protocol support for easy testing against other engines -->
 
 ### Evaluation function
 - Material: pawn 100, knight 320, bishop 330, rook 500, queen 900
@@ -56,8 +55,8 @@ Expect ~5 hours/week. It's a bit hectic but super rewarding!
 - Cutechess: https://github.com/cutechess/cutechess
 - Zobrist hashing: https://en.wikipedia.org/wiki/Zobrist_hashing
 - Sebastian League's Videos:
-    https://www.youtube.com/watch?v=U4ogK0MIzqk, 
-    https://www.youtube.com/watch?v=_vqlIPDR2TU 
+    - https://www.youtube.com/watch?v=U4ogK0MIzqk
+    - https://www.youtube.com/watch?v=_vqlIPDR2TU 
 
 ## Things I learnt and Implemented - Endterm
 
@@ -98,4 +97,3 @@ Expect ~5 hours/week. It's a bit hectic but super rewarding!
 - Piece coordination bonuses for major pieces
 - Checkmate detection with large bonuses
 - Smooth transition between opening/middlegame/endgame phases
-
